@@ -4,14 +4,10 @@
             ))
 
 (defn greet "Simple Handler" [req]
-  (if (= "/" (:uri req))
-    {:status 200
-     :body "<h1>Greetings everybody!</h1>"
-     :headers {}}
-    {:status 404
-     :body "<h1>*** Incorrect address!!! ***</h1>"
-     :hearder {}}
-    )
+  (case (:uri req)
+    "/"             {:status 200 :body "<h1>Greetings everybody!</h1>" :headers {}}
+    "/goodbye"      {:status 200 :body "<h1>Goodbye Cruel World!</h1>" :headers {}} 
+    {:status 404 :body "<h1>*** Incorrect address!!! ***</h1>" :hearder {}})
   )
 
 (defn -main [port]
