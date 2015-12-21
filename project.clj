@@ -10,4 +10,7 @@
                  [ring "1.4.0"] 
                  ]
 
-  :main webdev.core) 
+  :main webdev.core
+  
+  :profiles {:dev {:main webdev.core/-dev-main}}
+  ) 
