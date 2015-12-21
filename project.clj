@@ -8,7 +8,7 @@
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [ring "1.4.0"] 
-                 ]
+                 [compojure "1.4.0"]]
 
   :main webdev.core
   
