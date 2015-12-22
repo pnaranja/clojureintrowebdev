@@ -18,7 +18,7 @@
 (defroutes app
   (GET "/" [] greet)
   (GET "/goodbye" [] goodbye)
-  (not-found "<h1>*** Incorrect address!!! ***</h1>)")
+  (not-found "<h1>*** Incorrect address!!! ***</h1>")
   )
 
 (defn -main [port]
