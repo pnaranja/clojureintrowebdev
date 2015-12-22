@@ -14,10 +14,12 @@
 
 (defn greet [req] {:status 200 :body "<h1>Greetings everybody!</h1>" :headers {}})
 (defn goodbye [req] {:status 200 :body "<h1>Goodbye Cruel World!</h1>" :headers {}})
+(defn about [req] {:status 200 :body "<h2>My name is Paul. This is a sample page</h2>" :headers {}})
 
 (defroutes app
   (GET "/" [] greet)
   (GET "/goodbye" [] goodbye)
+  (GET "/about" [] about)
   (not-found "<h1>*** Incorrect address!!! ***</h1>")
   )
 
