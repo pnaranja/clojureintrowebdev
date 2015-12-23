@@ -8,7 +8,10 @@
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [ring "1.4.0"] 
-                 [compojure "1.4.0"]]
+                 [compojure "1.4.0"]
+                 [org.clojure/java.jdbc "0.4.2"] 
+                 [org.postgresql/postgresql "9.4-1206-jdbc42"]
+                ]
 
   :min-lein-version "2.0.0"
 

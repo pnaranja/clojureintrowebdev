@@ -1,11 +1,17 @@
 (ns webdev.core
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
-            [compojure.core :refer [defroutes GET]]
+            [ring.middleware.params :refer [wrap-params]]
+            [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
             [ring.handler.dump :refer [handle-dump]]
+
+            [webdev.item.model :as items]
             ))
 
+(def db "jdbc:postgresql://localhost/webdev?user=postgres")
+
+;Handlers!
 (defn greet' "Simple Handler" [req]
   (case (:uri req)
     "/"             {:status 200 :body "<h1>Greetings everybody!</h1>" :headers {}}
@@ -30,7 +36,7 @@
            {:status 200 :headers {} :body (str (op num1 num2))}  
            {:status 404 :headers {} :body "<h1>Unknown Operation!</h1>"})))
 
-(defroutes app
+(defroutes routes
   (GET "/" [] greet)
   (GET "/goodbye" [] goodbye)
   (GET "/about" [] about)
@@ -40,9 +46,19 @@
   (not-found "<h1>*** Incorrect address!!! ***</h1>")
   )
 
+(defn wrap-db "Adds the db to the req map.  The assoc function adds key-val pair to a map"
+  [hdlr]
+  (fn [req]
+   (hdlr (assoc req :webdev/db db))))
+
+(def app "Middleware!"
+  (wrap-db (wrap-params routes)))
+
 (defn -main [port]
+  (items/create-table db)
   (jetty/run-jetty app {:port (Integer. port)}))
 
 (defn -dev-main [port]
+  (items/create-table db)
   (jetty/run-jetty (wrap-reload #'app) {:port (Integer. port)})
   )
