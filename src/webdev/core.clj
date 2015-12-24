@@ -7,6 +7,7 @@
             [ring.handler.dump :refer [handle-dump]]
 
             [webdev.item.model :as items]
+            [webdev.item.handler :as handler]
             ))
 
 (def db "jdbc:postgresql://localhost/webdev?user=postgres")
@@ -43,16 +44,26 @@
   (GET "/request" [] handle-dump)
   (GET "/yo/:name" [] yo)
   (GET "/calc/:num1/:op/:num2" [] calc)
+  (GET "/item" [] handler/handle-index-items)
   (not-found "<h1>*** Incorrect address!!! ***</h1>")
   )
 
-(defn wrap-db "Adds the db to the req map.  The assoc function adds key-val pair to a map"
+(defn wrap-db 
+  "Adds the db to the req map.  The assoc function adds key-val pair to a map"
   [hdlr]
   (fn [req]
    (hdlr (assoc req :webdev/db db))))
 
+(defn wrap-server-header 
+  "Adds Server header to the response.  Therefore it's adding something after the request has been handled.
+   Header is the {'HeaderName' 'ServerName'}.  The assoc-in adds to the response, 
+   a keyword map :headers to a Header -> {:headers {'HeaderName' 'ServerName'}}"
+  [hdlr]
+  (fn [req]
+    (assoc-in (hdlr req) [:headers "Server"] "PaulsServer")))
+
 (def app "Middleware!"
-  (wrap-db (wrap-params routes)))
+  (wrap-server-header (wrap-db (wrap-params routes))))
 
 (defn -main [port]
   (items/create-table db)
